@@ -23,11 +23,14 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.config.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.config.ProviderSettings;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -43,6 +46,18 @@ public class AuthorizationServerConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+
+        // Enable CORS on Authentication Server endpoints
+        http.cors(c -> {
+            CorsConfigurationSource source = request -> {
+                CorsConfiguration config = new CorsConfiguration();
+                config.setAllowedOrigins(List.of("*"));
+                config.setAllowedMethods(List.of("GET", "POST"));
+                return config;
+            };
+            c.configurationSource(source);
+        });
+
         return http.formLogin(Customizer.withDefaults()).build();
     }
 
