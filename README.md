@@ -34,8 +34,20 @@ public class AuthorizationServerConfiguration {
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain authServerSecurityFilterChain(HttpSecurity http) throws Exception {
-        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
-        return http.formLogin(Customizer.withDefaults()).build();
+         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+         
+         // Enable CORS on Authentication Server endpoints
+         http.cors(c -> {
+            CorsConfigurationSource source = request -> {
+               CorsConfiguration config = new CorsConfiguration();
+               config.setAllowedOrigins(List.of("*"));
+               config.setAllowedMethods(List.of("GET", "POST"));
+               return config;
+            };
+            c.configurationSource(source);
+         });
+         
+         return http.formLogin(Customizer.withDefaults()).build();
     }
 
     @Bean
@@ -59,7 +71,6 @@ public class AuthorizationServerConfiguration {
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(AuthorizationGrantType.JWT_BEARER)
                 .authorizationGrantType(AuthorizationGrantType.PASSWORD) // not implemented
                 .redirectUri("https://oidcdebugger.com/debug")
                 .scope(OidcScopes.OPENID)
