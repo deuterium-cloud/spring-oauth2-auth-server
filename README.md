@@ -454,3 +454,4 @@ More resources: <br>
 [Baeldung: Spring Security OAuth Authorization Server](https://www.baeldung.com/spring-security-oauth-auth-server) <br>
 [The OAuth 2.0 docs](https://datatracker.ietf.org/doc/html/rfc6749) <br>
 [Okta: OAuth Grant Types](https://oauth.net/2/grant-types/) <br>
+[Spring Authorization Server Reference](https://docs.spring.io/spring-authorization-server/docs/current/reference/html/index.html) <br>
